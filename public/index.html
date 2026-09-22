@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FROMEX - Corporate Attendance & Accounting Management</title>
+  
+  <!-- CSS Stylesheets -->
+  <link rel="stylesheet" href="css/variables.css" />
+  <link rel="stylesheet" href="css/main.css" />
+  <link rel="stylesheet" href="css/components.css" />
+  <link rel="stylesheet" href="css/excel-table.css" />
+  <link rel="stylesheet" href="css/responsive.css" />
+</head>
+<body>
+
+  <!-- Mobile Live Time Banner (Visible on mobile/tablets) -->
+  <div class="mobile-time-bar" style="display: none;">
+    <div style="display: flex; align-items: center; gap: 6px;">
+      <span class="live-indicator-icon"></span>
+      <span data-live-date>Wednesday, 16 September 2026</span>
+    </div>
+    <div data-live-clock style="font-family: var(--font-mono); font-weight: 700; color: #38bdf8;">--:--:-- --</div>
+  </div>
+
+  <!-- Corporate Header -->
+  <header class="app-header">
+    <div class="brand-section">
+      <div class="brand-logo-icon">FX</div>
+      <div class="brand-info">
+        <span class="brand-title">FROMEX</span>
+        <span class="brand-subtitle">Corporate Management</span>
+      </div>
+    </div>
+
+    <!-- Live Date & Clock Display -->
+    <div class="header-center">
+      <div class="live-date-wrapper">
+        <span class="live-indicator-icon"></span>
+        <span class="header-label">Date:</span>
+        <span class="live-date-val" data-live-date>--</span>
+      </div>
+      <div class="header-divider"></div>
+      <div class="live-clock-wrapper">
+        <span class="header-label">Time:</span>
+        <span class="live-clock-val" data-live-clock>00:00:00 --</span>
+      </div>
+    </div>
+
+    <!-- Header Right Actions: Real-time status & User Profile -->
+    <div class="header-actions">
+      <button type="button" id="header-btn-clear-data" class="header-clear-btn" title="Clear operational attendance and accounting records with instant undo protection">
+        <span>🗑️</span> Clear Data
+      </button>
+
+      <div id="sync-status-badge" class="sync-status-badge">
+        <span class="live-indicator-icon"></span> Live Shared Sync
+      </div>
+
+      <button type="button" id="user-profile-btn" class="user-profile-btn" title="Switch Authorized User">
+        <div id="header-user-avatar" class="user-avatar">FX</div>
+        <div class="user-meta">
+          <span id="header-user-name" class="user-name">FROMEX</span>
+          <span id="header-user-role" class="user-role">Admin</span>
+        </div>
+        <span class="user-dropdown-arrow">&#9662;</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Navigation Bar strictly limited to Dashboard, Attendance, Accounting, Settings -->
+  <nav class="app-navbar">
+    <div class="nav-tabs">
+      <button type="button" class="nav-tab active" data-tab="dashboard" id="nav-tab-dashboard">
+        <span class="nav-tab-icon">📊</span>
+        <span>Dashboard</span>
+      </button>
+      <button type="button" class="nav-tab" data-tab="employees" id="nav-tab-employees">
+        <span class="nav-tab-icon">👥</span>
+        <span>Employees</span>
+      </button>
+      <button type="button" class="nav-tab" data-tab="attendance" id="nav-tab-attendance">
+        <span class="nav-tab-icon">⏱️</span>
+        <span>Attendance</span>
+      </button>
+      <button type="button" class="nav-tab" data-tab="accounting" id="nav-tab-accounting">
+        <span class="nav-tab-icon">💳</span>
+        <span>Accounting</span>
+      </button>
+      <button type="button" class="nav-tab" data-tab="settings" id="nav-tab-settings">
+        <span class="nav-tab-icon">⚙️</span>
+        <span>Settings</span>
+      </button>
+      <button type="button" class="nav-tab" data-tab="users" id="nav-tab-users" style="display: none;">
+        <span class="nav-tab-icon">👥</span>
+        <span>Users</span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Main View Area -->
+  <main class="app-main">
+
+    <!-- ==========================================
+         VIEW 1: DASHBOARD
+         ========================================== -->
+    <section id="view-dashboard" class="view-section active">
+      <div class="view-header">
+        <div class="view-title-group">
+          <h1>Corporate Dashboard</h1>
+          <p>Real-time workforce attendance metrics and company financial overview</p>
+        </div>
+        <div class="view-toolbar">
+          <button type="button" id="btn-quick-employee" class="btn btn-outline btn-sm">
+            <span>+</span> Add Employee
+          </button>
+          <button type="button" id="btn-quick-attendance" class="btn btn-outline btn-sm">
+            <span>+</span> Mark Attendance
+          </button>
+          <button type="button" id="btn-quick-salary" class="btn btn-outline btn-sm">
+            <span>+</span> Record Salary Slip
+          </button>
+          <button type="button" id="btn-quick-txn" class="btn btn-primary btn-sm">
+            <span>+</span> New Transaction
+          </button>
+          <button type="button" class="btn btn-outline btn-sm btn-trigger-clear-data" title="Clear operational data with instant undo protection" style="color: var(--danger); border-color: rgba(239, 68, 68, 0.35);">
+            <span>🗑️</span> Clear Data
+          </button>
+        </div>
+      </div>
+
+      <!-- KPI Grid -->
+      <div id="dashboard-kpis" class="kpi-grid">
+        <!-- Injected dynamically by dashboard.js -->
+      </div>
+
+      <!-- Dashboard Visual Charts & Widgets -->
+      <div class="dashboard-content-grid">
+        <!-- Left: Weekly Attendance Trend -->
+        <div class="widget-card">
+          <div class="widget-header">
+            <div>
+              <div class="widget-title">Attendance Trends (Last 7 Days)</div>
+              <div class="widget-subtitle">Workforce presence, half-day, and absence breakdown</div>
+            </div>
+            <button type="button" class="btn btn-outline btn-sm" onclick="document.getElementById('nav-tab-attendance').click()">View Roster &rarr;</button>
+          </div>
+          <div id="attendance-trend-chart" class="chart-container">
+            <!-- Injected by dashboard.js -->
+          </div>
+
+          <div style="margin-top: 10px;">
+            <div style="font-size: 13px; font-weight: 700; color: var(--secondary); margin-bottom: 8px;">Recent Attendance Logs</div>
+            <div id="recent-attendance-list"></div>
+          </div>
+        </div>
+
+        <!-- Right: Financial Overview & Cash Flow Ratio -->
+        <div class="widget-card">
+          <div class="widget-header">
+            <div>
+              <div class="widget-title">Financial Health</div>
+              <div class="widget-subtitle">Cashflow income vs expense balance</div>
+            </div>
+            <button type="button" class="btn btn-outline btn-sm" onclick="document.getElementById('nav-tab-accounting').click()">Ledger &rarr;</button>
+          </div>
+
+          <div id="cashflow-widget">
+            <!-- Injected by dashboard.js -->
+          </div>
+
+          <div style="margin-top: 14px;">
+            <div style="font-size: 13px; font-weight: 700; color: var(--secondary); margin-bottom: 8px;">Recent Ledger Transactions</div>
+            <div id="recent-transactions-list"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         VIEW: EMPLOYEES MANAGEMENT
+         ========================================== -->
+    <section id="view-employees" class="view-section">
+      <div class="view-header">
+        <div class="view-title-group">
+          <h1>Company Employees</h1>
+          <p>Manage employee roster, designations, monthly salary packages, and active status</p>
+        </div>
+        <div class="view-toolbar">
+          <button type="button" id="btn-export-employees" class="btn btn-outline">
+            📥 Export to CSV
+          </button>
+          <button type="button" id="btn-add-employee" class="btn btn-primary">
+            <span>+</span> Add Employee
+          </button>
+        </div>
+      </div>
+
+      <!-- Employees Excel-like Table Card -->
+      <div class="excel-card">
+        <div class="excel-toolbar">
+          <div class="excel-toolbar-left">
+            <div class="search-box">
+              <span class="search-icon">🔍</span>
+              <input type="text" id="employees-search-input" class="search-input" placeholder="Search by name, ID, designation, phone..." />
+            </div>
+
+            <select id="employees-status-filter" class="select-control" title="Filter by Status">
+              <option value="All">All Statuses</option>
+              <option value="Active">Active</option>
+              <option value="Inactive">Inactive</option>
+              <option value="On Leave">On Leave</option>
+            </select>
+          </div>
+
+          <div class="excel-toolbar-right">
+            <span id="employees-count-pill" class="table-stats-pill">0 Employees</span>
+          </div>
+        </div>
+
+        <div class="excel-scroll-wrapper">
+          <table id="employees-table" class="excel-table">
+            <thead>
+              <tr>
+                <th class="text-center sortable" data-sort="employee_code" style="width: 110px;">
+                  Emp Code <span class="sort-indicator">⇅</span>
+                </th>
+                <th class="sortable" data-sort="name">
+                  Full Name <span class="sort-indicator">⇅</span>
+                </th>
+                <th class="sortable" data-sort="designation">
+                  Designation <span class="sort-indicator">⇅</span>
+                </th>
+                <th class="sortable" data-sort="phone" style="width: 150px;">
+                  Phone <span class="sort-indicator">⇅</span>
+                </th>
+                <th class="text-right sortable" data-sort="basic_salary" style="width: 130px;">
+                  Basic Salary <span class="sort-indicator">⇅</span>
+                </th>
+                <th class="text-right sortable" data-sort="allowance" style="width: 110px;">
+                  Allowance <span class="sort-indicator">⇅</span>
+                </th>
+                <th class="text-right sortable" data-sort="deduction" style="width: 110px;">
+                  Deduction <span class="sort-indicator">⇅</span>
+                </th>
+                <th class="text-right" style="width: 130px;">
+                  Net Package
+                </th>
+                <th class="text-center sortable" data-sort="status" style="width: 110px;">
+                  Status <span class="sort-indicator">⇅</span>
+                </th>
+                <th class="text-center" style="width: 140px;">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="employees-table-body">
+              <!-- Dynamically populated by employees.js -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         VIEW 2: ATTENDANCE MODULE
+         ========================================== -->
+    <section id="view-attendance" class="view-section">
+      <div class="view-header">
+        <div class="view-title-group">
+          <h1>Attendance Management</h1>
+          <p>Excel-like attendance sheet with automated working hours calculation</p>
+        </div>
+        <div class="view-toolbar">
+          <button type="button" id="btn-export-attendance" class="btn btn-outline">
+            📥 Export to CSV
+          </button>
+          <button type="button" id="btn-add-attendance" class="btn btn-primary">
+            <span>+</span> Add Attendance
+          </button>
+          <button type="button" class="btn btn-outline btn-trigger-clear-data" title="Clear operational data with instant undo protection" style="color: var(--danger); border-color: rgba(239, 68, 68, 0.35);">
+            <span>🗑️</span> Clear Data
+          </button>
+        </div>
+      </div>
+
+      <!-- Excel Data Grid Container -->
+      <div class="excel-container">
+        <!-- Excel Filter & Search Strip -->
+        <div class="excel-toolbar">
+          <div class="excel-toolbar-left">
+            <div class="search-input-group">
+              <span class="search-input-icon">🔍</span>
+              <input type="text" id="attendance-search" class="search-input" placeholder="Search employee name or ID..." />
+            </div>
+
+            <select id="attendance-status-filter" class="select-control" title="Filter by Status">
+              <option value="All">All Statuses</option>
+              <option value="Present">Present</option>
+              <option value="Half Day">Half Day</option>
+              <option value="Leave">Leave</option>
+              <option value="Absent">Absent</option>
+            </select>
+
+            <select id="attendance-employee-filter" class="select-control" title="Filter by Employee">
+              <option value="All">All Employees</option>
+            </select>
+
+            <select id="attendance-view-mode" class="select-control" title="View Mode">
+              <option value="all">All Dates</option>
+              <option value="daily" selected>Daily View</option>
+              <option value="monthly">Monthly View</option>
+            </select>
+
+            <div id="attendance-date-group" style="display: flex; align-items: center; gap: 6px;">
+              <input type="date" id="attendance-date-picker" class="input-control" />
+            </div>
+
+            <div id="attendance-month-group" style="display: none; align-items: center; gap: 6px;">
+              <input type="month" id="attendance-month-picker" class="input-control" value="2026-09" />
+            </div>
+          </div>
+
+          <div class="excel-toolbar-right">
+            <span id="attendance-count-pill" class="table-stats-pill">0 Records</span>
+          </div>
+        </div>
+
+        <!-- Excel Table Scroll Wrapper -->
+        <div class="excel-scroll-wrapper">
+          <table id="attendance-table" class="excel-table">
+            <thead>
+              <tr>
+                <th class="sortable" data-sort="emp_id" style="width: 100px;">
+                  Emp ID <span class="sort-indicator">⇅</span>
+                </th>
+                <th class="sortable" data-sort="emp_name">
+                  Employee Name <span class="sort-indicator">⇅</span>
+                </th>
+                <th class="text-center sortable" data-sort="date" style="width: 120px;">
+                  Date <span class="sort-indicator">⇅</span>
+                </th>
+                <th class="text-center" style="width: 60px;">Day</th>
+                <th class="text-center" style="width: 100px;">Check In</th>
+                <th class="text-center" style="width: 100px;">Check Out</th>
+                <th class="text-center sortable" data-sort="status" style="width: 110px;">
+                  Status <span class="sort-indicator">⇅</span>
+                </th>
+                <th class="text-right sortable" data-sort="working_hours" style="width: 120px;">
+                  Working Hours <span class="sort-indicator">⇅</span>
+                </th>
+                <th>Remarks</th>
+                <th class="text-center" style="width: 90px;">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="attendance-table-body">
+              <!-- Rendered dynamically -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         VIEW 3: ACCOUNTING MODULE
+         ========================================== -->
+    <section id="view-accounting" class="view-section">
+      <div class="view-header">
+        <div class="view-title-group">
+          <h1>Accounting & Finance</h1>
+          <p>Payroll calculation (Net = Basic + Allowance - Deduction) and cashbook ledger with automatic running balance</p>
+        </div>
+        <div class="view-toolbar">
+          <div style="display: flex; gap: 6px; background: #e2e8f0; padding: 3px; border-radius: var(--radius-md);">
+            <button type="button" id="btn-subtab-salaries" class="btn btn-primary btn-sm">
+              💼 Employee Salaries
+            </button>
+            <button type="button" id="btn-subtab-transactions" class="btn btn-outline btn-sm">
+              🏦 Accounting Transactions
+            </button>
+          </div>
+          <button type="button" class="btn btn-outline btn-sm btn-trigger-clear-data" title="Clear operational data with instant undo protection" style="color: var(--danger); border-color: rgba(239, 68, 68, 0.35);">
+            <span>🗑️</span> Clear Data
+          </button>
+        </div>
+      </div>
+
+      <!-- Accounting Summary Metric Strip -->
+      <div class="kpi-grid" style="grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));">
+        <div class="kpi-card kpi-green" style="padding: 12px 16px;">
+          <span class="kpi-label">Total Cash Inflow</span>
+          <div id="acc-summary-income" class="kpi-val currency" style="font-size: 19px; color: #059669;">₹0.00</div>
+        </div>
+        <div class="kpi-card kpi-red" style="padding: 12px 16px;">
+          <span class="kpi-label">Total Cash Outflow</span>
+          <div id="acc-summary-expense" class="kpi-val currency" style="font-size: 19px; color: #dc2626;">₹0.00</div>
+        </div>
+        <div class="kpi-card kpi-blue" style="padding: 12px 16px;">
+          <span class="kpi-label">Current Cash Balance</span>
+          <div id="acc-summary-balance" class="kpi-val currency" style="font-size: 19px;">₹0.00</div>
+        </div>
+        <div class="kpi-card kpi-indigo" style="padding: 12px 16px;">
+          <span class="kpi-label">Monthly Net Payroll</span>
+          <div id="acc-summary-payroll" class="kpi-val currency" style="font-size: 19px; color: #4338ca;">₹0.00</div>
+        </div>
+      </div>
+
+      <!-- SUB-SECTION A: EMPLOYEE SALARY MANAGEMENT -->
+      <div id="accounting-salaries-section" class="excel-container">
+        <div class="excel-toolbar">
+          <div class="excel-toolbar-left">
+            <div class="search-input-group">
+              <span class="search-input-icon">🔍</span>
+              <input type="text" id="salary-search" class="search-input" placeholder="Search employee or ID..." />
+            </div>
+
+            <select id="salary-month-filter" class="select-control" title="Filter by Month">
+              <option value="September 2026" selected>September 2026</option>
+              <option value="August 2026">August 2026</option>
+              <option value="July 2026">July 2026</option>
+              <option value="October 2026">October 2026</option>
+              <option value="All">All Months</option>
+            </select>
+
+            <select id="salary-status-filter" class="select-control" title="Filter by Payment Status">
+              <option value="All">All Payment Statuses</option>
+              <option value="Paid">Paid</option>
+              <option value="Processing">Processing</option>
+              <option value="Pending">Pending</option>
+            </select>
+          </div>
+
+          <div class="excel-toolbar-right">
+            <span id="salaries-count-pill" class="table-stats-pill">0 Records</span>
+            <button type="button" id="btn-export-salaries" class="btn btn-outline btn-sm">
+              📥 Export CSV
+            </button>
+            <button type="button" id="btn-add-salary" class="btn btn-primary btn-sm">
+              <span>+</span> Add Salary Slip
+            </button>
+          </div>
+        </div>
+
+        <div class="excel-scroll-wrapper">
+          <table id="salaries-table" class="excel-table">
+            <thead>
+              <tr>
+                <th class="sortable" data-sort="emp_id" style="width: 100px;">
+                  Emp ID <span class="sort-indicator">⇅</span>
+                </th>
+                <th class="sortable" data-sort="emp_name">
+                  Employee Name <span class="sort-indicator">⇅</span>
+                </th>
+                <th class="text-center sortable" data-sort="month" style="width: 130px;">
+                  Month <span class="sort-indicator">⇅</span>
+                </th>
+                <th class="text-right sortable" data-sort="basic_salary" style="width: 130px;">
+                  Basic Salary <span class="sort-indicator">⇅</span>
+                </th>
+                <th class="text-right sortable" data-sort="allowance" style="width: 120px;">
+                  Allowance <span class="sort-indicator">⇅</span>
+                </th>
+                <th class="text-right sortable" data-sort="deduction" style="width: 120px;">
+                  Deduction <span class="sort-indicator">⇅</span>
+                </th>
+                <th class="text-right sortable" data-sort="net_salary" style="width: 140px; background: #e2e8f0; color: var(--primary);">
+                  Net Salary <span class="sort-indicator">⇅</span>
+                </th>
+                <th class="text-center sortable" data-sort="payment_date" style="width: 110px;">
+                  Pay Date <span class="sort-indicator">⇅</span>
+                </th>
+                <th class="text-center sortable" data-sort="payment_status" style="width: 110px;">
+                  Status <span class="sort-indicator">⇅</span>
+                </th>
+                <th>Remarks</th>
+                <th class="text-center" style="width: 90px;">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="salaries-table-body">
+              <!-- Dynamically rendered -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- SUB-SECTION B: ACCOUNTING TRANSACTIONS LEDGER -->
+      <div id="accounting-transactions-section" class="excel-container" style="display: none;">
+        <div class="excel-toolbar">
+          <div class="excel-toolbar-left">
+            <div class="search-input-group">
+              <span class="search-input-icon">🔍</span>
+              <input type="text" id="txn-search" class="search-input" placeholder="Search description, party, remarks..." />
+            </div>
+
+            <select id="txn-type-filter" class="select-control" title="Filter by Transaction Type">
+              <option value="All">All Types</option>
+              <option value="Income">Income</option>
+              <option value="Expense">Expense</option>
+              <option value="Salary">Salary</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+
+          <div class="excel-toolbar-right">
+            <span id="transactions-count-pill" class="table-stats-pill">0 Entries</span>
+            <button type="button" id="btn-export-transactions" class="btn btn-outline btn-sm">
+              📥 Export CSV
+            </button>
+            <button type="button" id="btn-add-transaction" class="btn btn-primary btn-sm">
+              <span>+</span> Record Transaction
+            </button>
+          </div>
+        </div>
+
+        <div class="excel-scroll-wrapper">
+          <table id="transactions-table" class="excel-table">
+            <thead>
+              <tr>
+                <th class="text-center sortable" data-sort="date" style="width: 110px;">
+                  Date <span class="sort-indicator">⇅</span>
+                </th>
+                <th class="text-center sortable" data-sort="type" style="width: 100px;">
+                  Type <span class="sort-indicator">⇅</span>
+                </th>
+                <th class="sortable" data-sort="description">
+                  Description <span class="sort-indicator">⇅</span>
+                </th>
+                <th class="sortable" data-sort="party" style="width: 220px;">
+                  Employee / Party <span class="sort-indicator">⇅</span>
+                </th>
+                <th class="text-right sortable" data-sort="income" style="width: 130px;">
+                  Income (₹) <span class="sort-indicator">⇅</span>
+                </th>
+                <th class="text-right sortable" data-sort="expense" style="width: 130px;">
+                  Expense (₹) <span class="sort-indicator">⇅</span>
+                </th>
+                <th class="text-right sortable" data-sort="balance" style="width: 150px; background: #e2e8f0;">
+                  Running Balance (₹) <span class="sort-indicator">⇅</span>
+                </th>
+                <th>Remarks</th>
+                <th class="text-center" style="width: 90px;">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="transactions-table-body">
+              <!-- Dynamically rendered -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ==========================================
+         VIEW 4: SETTINGS & ADMINISTRATION
+         ========================================== -->
+    <section id="view-settings" class="view-section">
+      <div class="view-header">
+        <div class="view-title-group">
+          <h1>System Settings & Administration</h1>
+          <p>User accounts, persistent PostgreSQL data management, and one-click safety reset with instant undo</p>
+        </div>
+      </div>
+
+      <!-- Settings Sub-Navigation Tabs -->
+      <div class="settings-subnav">
+        <button type="button" class="settings-subtab active" data-settings-subtab="users" id="subtab-settings-users">
+          <span class="settings-subtab-icon">👥</span>
+          <span>User Management</span>
+        </button>
+        <button type="button" class="settings-subtab" data-settings-subtab="data" id="subtab-settings-data">
+          <span class="settings-subtab-icon">🗑️</span>
+          <span>Data Management & Reset</span>
+        </button>
+        <button type="button" class="settings-subtab" data-settings-subtab="info" id="subtab-settings-info">
+          <span class="settings-subtab-icon">🏢</span>
+          <span>System Information</span>
+        </button>
+      </div>
+
+      <!-- SUBVIEW 1: USERS MANAGEMENT -->
+      <div id="settings-subview-users" class="settings-subview-panel">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; flex-wrap: wrap; gap: 10px;">
+          <div>
+            <h2 style="font-size: 16px; font-weight: 700; color: var(--secondary); margin: 0;">Authorized Company Users</h2>
+            <p style="font-size: 13px; color: var(--text-muted); margin: 2px 0 0 0;">Manage employee accounts, role-based access, and login credentials</p>
+          </div>
+          <div class="view-toolbar">
+            <button type="button" id="btn-export-users" class="btn btn-outline btn-sm">
+              📥 Export CSV
+            </button>
+            <button type="button" id="btn-add-user" class="btn btn-primary btn-sm">
+              <span>+</span> Add User
+            </button>
+          </div>
+        </div>
+
+        <div class="excel-card">
+          <div class="excel-toolbar">
+            <div class="excel-toolbar-left">
+              <div class="search-box">
+                <span class="search-icon">🔍</span>
+                <input type="text" id="users-search-input" class="search-input" placeholder="Search by name, username or ID..." />
+              </div>
+
+              <select id="users-role-filter" class="select-control" title="Filter by User Role">
+                <option value="All">All Roles</option>
+                <option value="Admin">Admin</option>
+                <option value="Manager">Manager</option>
+                <option value="Staff">Staff</option>
+              </select>
+
+              <select id="users-status-filter" class="select-control" title="Filter by Status">
+                <option value="All">All Statuses</option>
+                <option value="Active">Active</option>
+                <option value="Disabled">Disabled</option>
+              </select>
+            </div>
+
+            <div class="excel-toolbar-right">
+              <span id="users-count-pill" class="table-stats-pill">0 Users</span>
+            </div>
+          </div>
+
+          <div class="excel-scroll-wrapper">
+            <table id="users-table" class="excel-table">
+              <thead>
+                <tr>
+                  <th class="text-center sortable" data-sort="id" style="width: 80px;">
+                    ID <span class="sort-indicator">⇅</span>
+                  </th>
+                  <th class="sortable" data-sort="name">
+                    Full Name <span class="sort-indicator">⇅</span>
+                  </th>
+                  <th class="sortable" data-sort="username" style="width: 160px;">
+                    Username <span class="sort-indicator">⇅</span>
+                  </th>
+                  <th class="sortable" data-sort="role" style="width: 130px;">
+                    Role <span class="sort-indicator">⇅</span>
+                  </th>
+                  <th class="text-center sortable" data-sort="status" style="width: 120px;">
+                    Status <span class="sort-indicator">⇅</span>
+                  </th>
+                  <th class="text-center sortable" data-sort="created_at" style="width: 140px;">
+                    Created Date <span class="sort-indicator">⇅</span>
+                  </th>
+                  <th class="text-center" style="width: 290px;">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="users-table-body">
+                <!-- Dynamically rendered by users.js -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- SUBVIEW 2: DATA MANAGEMENT & RESET (CLEAR & UNDO) -->
+      <div id="settings-subview-data" class="settings-subview-panel" style="display: none;">
+        
+        <!-- Live Record Counts Grid -->
+        <div class="settings-section-card">
+          <div class="settings-card-header">
+            <div>
+              <h3 class="settings-card-title">Live Database Statistics</h3>
+              <p class="settings-card-desc">Current operational records stored in PostgreSQL</p>
+            </div>
+            <button type="button" class="btn btn-outline btn-sm" onclick="document.getElementById('subtab-settings-data').click()">🔄 Refresh Counts</button>
+          </div>
+
+          <div class="settings-stats-grid">
+            <div class="settings-stat-box">
+              <div class="settings-stat-icon" style="background: #e0f2fe; color: #0284c7;">⏱️</div>
+              <div>
+                <div class="settings-stat-val" id="stat-attendance-count">0</div>
+                <div class="settings-stat-label">Attendance Records</div>
+              </div>
+            </div>
+
+            <div class="settings-stat-box">
+              <div class="settings-stat-icon" style="background: #fef3c7; color: #d97706;">💵</div>
+              <div>
+                <div class="settings-stat-val" id="stat-salaries-count">0</div>
+                <div class="settings-stat-label">Salary Payroll Slips</div>
+              </div>
+            </div>
+
+            <div class="settings-stat-box">
+              <div class="settings-stat-icon" style="background: #dcfce7; color: #16a34a;">💳</div>
+              <div>
+                <div class="settings-stat-val" id="stat-transactions-count">0</div>
+                <div class="settings-stat-label">Accounting Transactions</div>
+              </div>
+            </div>
+
+            <div class="settings-stat-box">
+              <div class="settings-stat-icon" style="background: #f3e8ff; color: #9333ea;">👥</div>
+              <div>
+                <div class="settings-stat-val" id="stat-employees-count">0</div>
+                <div class="settings-stat-label">Company Employees</div>
+              </div>
+            </div>
+
+            <div class="settings-stat-box highlight-total">
+              <div class="settings-stat-icon" style="background: #ede9fe; color: #6366f1;">📊</div>
+              <div>
+                <div class="settings-stat-val" id="stat-total-count">0</div>
+                <div class="settings-stat-label">Total Operational Data</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Danger Zone: One-Click Clear All Data -->
+        <div class="settings-section-card danger-card">
+          <div class="danger-card-badge">DANGER ZONE &bull; DATA PURGE</div>
+          <div class="settings-card-header">
+            <div>
+              <h3 class="settings-card-title text-danger">One-Click Clear All Data</h3>
+              <p class="settings-card-desc">
+                Clears all active operational records: <strong>Attendance logs</strong>, <strong>Salary payrolls</strong>, and <strong>Accounting transactions</strong> from the PostgreSQL database.
+              </p>
+            </div>
+          </div>
+
+          <div class="danger-info-box">
+            <div class="danger-info-icon">🛡️</div>
+            <div class="danger-info-text">
+              <strong>100% Safe Undo Protection:</strong>
+              Before deleting any records, the system automatically creates an immutable full snapshot and saves it in the PostgreSQL database. If you clear by accident or need the records back, you can click <strong>UNDO</strong> immediately or restore from the snapshot list below with zero data loss.
+            </div>
+          </div>
+
+          <div style="margin-top: 18px; display: flex; gap: 14px; align-items: center; flex-wrap: wrap;">
+            <button type="button" id="btn-clear-all-data" class="btn btn-danger btn-lg">
+              <span>🗑️</span> Clear All Operational Data
+            </button>
+            <span style="font-size: 12.5px; color: var(--text-muted);">
+              A confirmation dialog will appear before clearing to prevent accidental clicks.
+            </span>
+          </div>
+        </div>
+
+        <!-- Restore / Undo Snapshot Section -->
+        <div class="settings-section-card">
+          <div class="settings-card-header">
+            <div>
+              <h3 class="settings-card-title">Automatic Snapshots & Recovery History</h3>
+              <p class="settings-card-desc">Every clear operation creates a recovery point. Restore your data anytime with a single click.</p>
+            </div>
+            <button type="button" id="btn-quick-restore-last" class="btn btn-primary btn-sm">
+              <span>↩️</span> Restore Last Cleared Data
+            </button>
+          </div>
+
+          <div id="settings-backups-list" style="margin-top: 14px;">
+            <!-- Rendered dynamically by settings.js -->
+          </div>
+        </div>
+      </div>
+
+      <!-- SUBVIEW 3: SYSTEM INFORMATION -->
+      <div id="settings-subview-info" class="settings-subview-panel" style="display: none;">
+        <div class="settings-section-card">
+          <h3 class="settings-card-title" style="margin-bottom: 16px;">Corporate System & Architecture Info</h3>
+          
+          <div class="settings-info-grid">
+            <div class="info-row">
+              <span class="info-label">Application:</span>
+              <span class="info-value">FROMEX Company Management System</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Database Engine:</span>
+              <span class="info-value"><span class="badge badge-paid">PostgreSQL (PGlite Persistent Storage)</span></span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Active User:</span>
+              <span class="info-value" id="settings-info-user">Vikram Malhotra</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Access Level:</span>
+              <span class="info-value" id="settings-info-role">Admin</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Real-time Sync:</span>
+              <span class="info-value"><span class="badge" style="background:#e0f2fe; color:#0369a1;">Socket.IO Bidirectional</span></span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Snapshot & Undo:</span>
+              <span class="info-value"><span class="badge" style="background:#dcfce7; color:#16a34a;">Active & Persistent (Table: data_backups)</span></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- Fallback/alias hidden view-users for legacy links -->
+    <section id="view-users" class="view-section" style="display: none;"></section>
+  </main>
+
+  <!-- Floating Undo Notification Bar -->
+  <div id="floating-undo-banner" class="floating-undo-banner" style="display: none;">
+    <div class="floating-undo-content">
+      <div class="floating-undo-icon">⚠️</div>
+      <div class="floating-undo-text">
+        <div class="floating-undo-title">All operational records have been cleared!</div>
+        <div class="floating-undo-desc">Accidentally cleared? You can restore all data right now:</div>
+      </div>
+    </div>
+    <div class="floating-undo-actions">
+      <button type="button" id="btn-floating-undo" class="btn btn-undo">
+        <span>↩️</span> UNDO CLEAR (<span id="undo-countdown-timer">60</span>s)
+      </button>
+      <button type="button" id="btn-floating-dismiss" class="btn-undo-dismiss" title="Dismiss">&times;</button>
+    </div>
+    <div class="floating-undo-progress-bar">
+      <div id="floating-undo-progress" class="floating-undo-progress"></div>
+    </div>
+  </div>
+
+  <!-- App Footer -->
+  <footer class="app-footer">
+    <div>
+      <strong>FROMEX</strong> Corporate Management System &bull; Unified Shared Database Engine
+    </div>
+    <div style="display: flex; gap: 14px;">
+      <span>Database: <strong>PostgreSQL</strong></span>
+      <span>Currency: <strong>INR (₹)</strong></span>
+      <span>Version 1.0</span>
+    </div>
+  </footer>
+
+  <!-- Socket.IO & Application Bootstrap -->
+  <script src="/socket.io/socket.io.js"></script>
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>

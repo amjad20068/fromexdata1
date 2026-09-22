@@ -1,0 +1,224 @@
+/* ===================================================
+   RESPONSIVE DESIGN SYSTEM
+   Supports: 320px, 375px, 390px, 414px, 768px, 1024px, 1366px, 1920px
+   =================================================== */
+
+/* Tablet & Smaller (< 1024px) */
+@media (max-width: 1024px) {
+  .app-header {
+    padding: 0 16px;
+  }
+
+  .header-center {
+    display: none; /* Collapsed into mobile date/time banner or sub-bar */
+  }
+
+  .dashboard-content-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .kpi-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .app-main {
+    padding: 16px;
+    gap: 16px;
+  }
+}
+
+/* Tablets & Mobile Screens (< 768px) */
+@media (max-width: 768px) {
+  .app-header {
+    height: auto;
+    padding: 10px 14px;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .brand-title {
+    font-size: 18px;
+  }
+
+  .brand-logo-icon {
+    width: 32px;
+    height: 32px;
+    font-size: 17px;
+  }
+
+  /* User profile compact */
+  .user-role,
+  .user-dropdown-arrow {
+    display: none;
+  }
+
+  .user-profile-btn {
+    padding: 4px 8px;
+  }
+
+  .user-name {
+    font-size: 12px;
+  }
+
+  /* Mobile Live Clock Bar */
+  .mobile-time-bar {
+    display: flex !important;
+    background: #1e293b;
+    color: #ffffff;
+    padding: 6px 14px;
+    font-size: 11px;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  /* Navigation on mobile */
+  .app-navbar {
+    padding: 0 12px;
+    height: auto;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .nav-tabs {
+    width: 100%;
+    justify-content: flex-start;
+    gap: 2px;
+  }
+
+  .nav-tab {
+    padding: 10px 14px;
+    font-size: 12.5px;
+    white-space: nowrap;
+    border-bottom-width: 2px;
+  }
+
+  /* Toolbar wrapping */
+  .view-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .view-toolbar {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .excel-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .excel-toolbar-left,
+  .excel-toolbar-right {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .search-input {
+    width: 100%;
+    min-width: unset;
+  }
+
+  /* Form columns stack on mobile */
+  .form-row,
+  .form-row-3 {
+    grid-template-columns: 1fr !important;
+    gap: 10px;
+  }
+
+  /* Modal full screen on mobile */
+  .modal-container {
+    max-width: 100%;
+    height: auto;
+    max-height: 95vh;
+  }
+
+  .btn {
+    min-height: 38px;
+  }
+
+  .excel-scroll-wrapper {
+    max-height: 480px;
+  }
+}
+
+/* Small Smart Phones (< 480px: 320px, 375px, 390px, 414px) */
+@media (max-width: 480px) {
+  .kpi-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .kpi-card {
+    padding: 14px;
+  }
+
+  .kpi-val {
+    font-size: 22px;
+  }
+
+  .view-title-group h1 {
+    font-size: 19px;
+  }
+
+  .app-main {
+    padding: 12px;
+    gap: 12px;
+  }
+
+  .toast-container {
+    left: 12px;
+    right: 12px;
+    bottom: 12px;
+  }
+
+  .toast {
+    min-width: unset;
+    width: 100%;
+    font-size: 12px;
+    padding: 10px 14px;
+  }
+
+  .modal-footer {
+    flex-direction: column-reverse;
+  }
+
+  .modal-footer .btn {
+    width: 100%;
+  }
+
+  /* Mobile Floating Undo Banner */
+  .floating-undo-banner {
+    min-width: unset;
+    width: calc(100% - 24px);
+    bottom: 12px;
+    flex-direction: column;
+    align-items: stretch;
+    padding: 14px;
+    gap: 12px;
+  }
+
+  .floating-undo-actions {
+    justify-content: space-between;
+  }
+
+  .settings-subnav {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    white-space: nowrap;
+  }
+}
+
+/* Ultra Wide Screens (1920px+) */
+@media (min-width: 1920px) {
+  .app-main {
+    max-width: 1800px;
+  }
+
+  .kpi-grid {
+    grid-template-columns: repeat(5, 1fr);
+  }
+}
