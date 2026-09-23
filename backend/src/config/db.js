@@ -14,7 +14,7 @@ async function initDb() {
     try {
       const testPool = new Pool({
         connectionString: config.databaseUrl,
-        connectionTimeoutMillis: 1500
+        connectionTimeoutMillis: 10000
       });
       // Test quick query
       await testPool.query('SELECT 1');
