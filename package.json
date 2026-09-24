@@ -4,27 +4,37 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node backend/src/server.js",
-    "dev": "node backend/src/server.js",
-    "migrate": "node backend/database/migrations/migrate.js",
-    "seed": "node backend/database/seeds/seed.js",
-    "test": "node test-backend-e2e.js"
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "seed": "node scripts/seed.js",
+    "test": "node test-next-e2e.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "commonjs",
+  "type": "module",
   "dependencies": {
     "@electric-sql/pglite": "^0.5.8",
+    "@types/bcryptjs": "^2.4.6",
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/node": "^26.6.2",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
     "bcryptjs": "^3.0.3",
     "cors": "^2.8.6",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
     "helmet": "^8.3.0",
     "jsonwebtoken": "^9.0.3",
+    "mongoose": "^9.10.2",
+    "next": "^16.3.6",
     "pg": "^8.23.0",
     "puppeteer-core": "^25.11.0",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
     "socket.io": "^4.8.3",
-    "socket.io-client": "^4.8.3"
+    "socket.io-client": "^4.8.3",
+    "typescript": "^7.0.2"
   }
 }

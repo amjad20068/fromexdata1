@@ -1,5 +1,5 @@
 // Test Settings Stats, Clear, and Undo Endpoints
-const http = require('http');
+import http from 'http';
 
 const PORT = 3000;
 const BASE_URL = `http://localhost:${PORT}`;
