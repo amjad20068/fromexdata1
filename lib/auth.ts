@@ -39,6 +39,16 @@ export async function getAuthenticatedUser(req: Request): Promise<{
   }
 
   if (!token) {
+    const cookieHeader = req.headers.get('cookie');
+    if (cookieHeader) {
+      const match = cookieHeader.match(/(?:^|;\s*)fromex_token=([^;]+)/);
+      if (match) {
+        token = decodeURIComponent(match[1]);
+      }
+    }
+  }
+
+  if (!token) {
     const url = new URL(req.url);
     token = url.searchParams.get('token');
   }

@@ -16,13 +16,17 @@ export async function POST(req: NextRequest) {
     }
 
     await connectToDatabase();
-    let cleanUsername = String(rawUser).trim().toLowerCase();
-    if (cleanUsername.includes('@')) {
-      cleanUsername = cleanUsername.split('@')[0];
-    }
-    cleanUsername = cleanUsername.replace(/^@+/, '');
+    const rawInput = String(rawUser).trim().toLowerCase();
+    const cleanUsername = rawInput.replace(/^@+/, '');
+    const cleanUsernameNoDomain = rawInput.includes('@') ? rawInput.split('@')[0].replace(/^@+/, '') : cleanUsername;
 
-    const user = await User.findOne({ username: cleanUsername });
+    const user = await User.findOne({
+      $or: [
+        { username: cleanUsername },
+        { username: cleanUsernameNoDomain },
+        { email: rawInput }
+      ]
+    });
     if (!user) {
       return apiError('Invalid username or password', 401);
     }
@@ -50,7 +54,15 @@ export async function POST(req: NextRequest) {
       status: user.status
     };
 
-    return apiSuccess({ user: safeUser, token }, `Welcome back, ${user.name}`);
+    const res = apiSuccess({ user: safeUser, token }, `Welcome back, ${user.name}`);
+    res.cookies.set({
+      name: 'fromex_token',
+      value: token,
+      path: '/',
+      sameSite: 'lax',
+      maxAge: 7 * 24 * 60 * 60
+    });
+    return res;
   } catch (err: any) {
     console.error('Login route error:', err);
     return apiError(err.message || 'Internal server error', 500);

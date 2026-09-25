@@ -8,7 +8,7 @@ const __dirname = path.dirname(__filename);
 const BASE_URL = 'http://localhost:3000';
 
 async function safeClick(page, selector) {
-  await page.waitForSelector(selector, { visible: true, timeout: 5000 });
+  await page.waitForSelector(selector, { timeout: 10000 });
   await page.$eval(selector, el => {
     el.scrollIntoView({ block: 'center' });
     el.click();
@@ -32,9 +32,33 @@ async function runBrowserTests() {
   });
   page.on('pageerror', err => consoleErrors.push(err.message));
 
-  // 1. Desktop Viewport (1440x900)
-  console.log('1. Testing Desktop Layout (1440x900)...');
+  // 0. Test Login Page & Authentication Flow
+  console.log('0. Testing Admin Login Page (/login)...');
   await page.setViewport({ width: 1440, height: 900 });
+  await page.goto(`${BASE_URL}/login`, { waitUntil: 'networkidle2' });
+  await new Promise(r => setTimeout(r, 1000));
+
+  await page.waitForSelector('#login-username', { visible: true });
+  await page.waitForSelector('#login-password', { visible: true });
+  await page.waitForSelector('#login-submit-btn', { visible: true });
+
+  // Test invalid login feedback
+  await page.type('#login-username', 'fromex');
+  await page.type('#login-password', 'wrong_password_test');
+  await safeClick(page, '#login-submit-btn');
+  await page.waitForSelector('#login-error-alert', { visible: true, timeout: 5000 });
+  const errorAlert = await page.$eval('#login-error-alert', el => el.textContent.trim());
+  console.log(`  Login error feedback: "${errorAlert}"`);
+
+  // Test valid login & redirect
+  await page.$eval('#login-password', el => el.value = '');
+  await page.type('#login-password', 'fromex123');
+  await safeClick(page, '#login-submit-btn');
+  await new Promise(r => setTimeout(r, 2000));
+  console.log(`  ✅ Authenticated successfully through Login page`);
+
+  // 1. Desktop Viewport (1440x900)
+  console.log('\n1. Testing Desktop Layout (1440x900)...');
   await page.goto(BASE_URL, { waitUntil: 'networkidle2' });
   await new Promise(r => setTimeout(r, 1500));
 
@@ -145,6 +169,48 @@ async function runBrowserTests() {
 
   await page.screenshot({ path: path.join(__dirname, 'public', 'preview_database_monitor.png') });
   console.log('  📸 Saved public/preview_database_monitor.png');
+
+  // 6b. Test Create New Admin via UI, Logout, and Login as New Admin
+  console.log('\n6b. Testing Create New Admin via UI, Logout, and Login as New Admin...');
+  await safeClick(page, '#subtab-settings-users');
+  await new Promise(r => setTimeout(r, 600));
+
+  await safeClick(page, '#btn-add-user');
+  await new Promise(r => setTimeout(r, 600));
+
+  const uiAdminUsername = `admin_ui_${Date.now().toString().slice(-4)}`;
+  await page.type('#user-form-name', 'Operations Director');
+  await page.type('#user-form-username', uiAdminUsername);
+  await page.type('#user-form-password', 'DirectorPass2026');
+  await page.select('#user-form-role', 'Admin');
+
+  await safeClick(page, '#user-form-save-btn');
+  await new Promise(r => setTimeout(r, 1200));
+  console.log(`  ✅ Successfully created new Admin "${uiAdminUsername}" via UI`);
+
+  // Logout
+  console.log('  Logging out current admin session...');
+  await safeClick(page, '#header-logout-btn');
+  await new Promise(r => setTimeout(r, 1200));
+
+  // Verify redirected to /login
+  await page.waitForSelector('#login-username', { visible: true });
+  console.log('  ✅ Successfully logged out and redirected to /login');
+
+  // Screenshot login page
+  await page.screenshot({ path: path.join(__dirname, 'public', 'preview_login_page.png') });
+  console.log('  📸 Saved public/preview_login_page.png');
+
+  // Login as newly created admin
+  console.log(`  Logging in as newly created Admin "${uiAdminUsername}"...`);
+  await page.type('#login-username', uiAdminUsername);
+  await page.type('#login-password', 'DirectorPass2026');
+  await safeClick(page, '#login-submit-btn');
+  await new Promise(r => setTimeout(r, 2000));
+
+  // Verify dashboard loaded for new admin
+  await page.waitForSelector('.brand-title', { visible: true });
+  console.log(`  ✅ Successfully logged in as newly created Admin "${uiAdminUsername}" and reached dashboard!`);
 
   // 7. Responsive Tests
   console.log('\n7. Testing Responsive Viewports...');

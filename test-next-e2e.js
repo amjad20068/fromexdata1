@@ -180,6 +180,42 @@ async function runAllTests() {
   const selfDel = await request(`/api/users/${adminLogin.body.data.user.id}`, { method: 'DELETE', headers: adminAuth });
   assert(selfDel.status === 400, 'Admin self-deletion blocked with HTTP 400');
 
+  // New Admin Creation & Login Verification (Phase 9 & 10 requirement)
+  console.log('\n--- 3b. NEW ADMIN CREATION & AUTHENTICATION VERIFICATION ---');
+  const newAdminUser = `admin_test_${Date.now().toString().slice(-4)}`;
+  const createNewAdmin = await request('/api/users', { method: 'POST', headers: adminAuth }, {
+    name: 'Executive Test Admin',
+    username: newAdminUser,
+    email: `${newAdminUser}@fromex.com`,
+    password: 'secureAdminPass2026',
+    role: 'Admin',
+    status: 'Active'
+  });
+  assert(createNewAdmin.status === 201, 'Logged-in Admin successfully created a new Admin');
+  assert(createNewAdmin.body.data.user.role === 'Admin', 'Newly created user assigned Admin role');
+  const newAdminId = createNewAdmin.body.data.user.id;
+
+  // Verify newly created Admin can log in via /api/auth/login
+  const newAdminLogin = await request('/api/auth/login', { method: 'POST' }, {
+    username: newAdminUser,
+    password: 'secureAdminPass2026'
+  });
+  assert(newAdminLogin.status === 200, 'Newly created Admin successfully logged in via /api/auth/login');
+  assert(newAdminLogin.body.data.user.role === 'Admin', 'Logged in user has Admin role');
+  const newAdminToken = newAdminLogin.body.data.token;
+  const newAdminAuth = { Authorization: `Bearer ${newAdminToken}` };
+
+  // Verify newly created Admin has admin permissions (accessing database monitor and user list)
+  const newAdminMonitor = await request('/api/settings/database-usage', { headers: newAdminAuth });
+  assert(newAdminMonitor.status === 200, 'Newly created Admin has authorized access to database monitor');
+
+  const newAdminUserList = await request('/api/users', { headers: newAdminAuth });
+  assert(newAdminUserList.status === 200, 'Newly created Admin has authorized access to /api/users');
+
+  // Clean up new test admin
+  const cleanNewAdmin = await request(`/api/users/${newAdminId}`, { method: 'DELETE', headers: adminAuth });
+  assert(cleanNewAdmin.status === 200, 'Test Admin successfully cleaned up');
+
   // 4. Employees CRUD
   console.log('\n--- 4. EMPLOYEES CRUD & RELATION PROTECTIONS ---');
   const empCode = `EMP-TEST-${Date.now().toString().slice(-4)}`;

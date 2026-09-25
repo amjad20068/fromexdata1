@@ -253,24 +253,20 @@ export default function FromexApplication() {
           }
         }
 
-        // Default login as root admin 'fromex'
-        const loginRes = await fetch('/api/auth/login', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ username: 'fromex', password: 'fromex123' })
-        });
-        const loginData = await loginRes.json();
-        if (loginRes.ok && loginData.token) {
-          localStorage.setItem('fromex_token', loginData.token);
-          setAuthToken(loginData.token);
-          if (loginData.user) setCurrentUser(loginData.user);
-        }
+        // Unauthenticated: redirect to /login
+        window.location.href = '/login';
       } catch (err) {
-        console.warn('Auto-login notice:', err);
+        window.location.href = '/login';
       }
     };
     initAuth();
   }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem('fromex_token');
+    document.cookie = 'fromex_token=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+    window.location.href = '/login';
+  };
 
   // 3. Load Data based on active tab
   const loadEmployees = async () => {
@@ -574,6 +570,22 @@ export default function FromexApplication() {
               <span id="header-user-role" className="user-role">{currentUser.role}</span>
             </div>
             <span className="user-dropdown-arrow">&#9662;</span>
+          </button>
+
+          <button
+            type="button"
+            id="header-logout-btn"
+            className="header-clear-btn"
+            onClick={handleLogout}
+            title="Log Out of System"
+            style={{
+              background: '#fef2f2',
+              color: '#dc2626',
+              border: '1px solid #fecaca',
+              marginLeft: '4px'
+            }}
+          >
+            <span>🚪</span> Logout
           </button>
         </div>
       </header>
@@ -2360,10 +2372,21 @@ export default function FromexApplication() {
               </div>
             </div>
             <div className="modal-footer" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
-              <span style={{ fontSize: '12px', color: 'var(--text-muted)', fontFamily: 'var(--font-mono)' }}>
-                {(modalData || []).length} Company Users
-              </span>
-              <button type="button" className="btn btn-outline" onClick={() => setModalType(null)}>Close</button>
+              <button
+                type="button"
+                id="modal-logout-btn"
+                className="btn btn-outline"
+                style={{ color: '#dc2626', borderColor: '#fecaca', background: '#fff' }}
+                onClick={handleLogout}
+              >
+                🚪 Sign Out
+              </button>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <span style={{ fontSize: '12px', color: 'var(--text-muted)', fontFamily: 'var(--font-mono)' }}>
+                  {(modalData || []).length} Company Users
+                </span>
+                <button type="button" className="btn btn-outline" onClick={() => setModalType(null)}>Close</button>
+              </div>
             </div>
           </div>
         </div>
@@ -3144,8 +3167,9 @@ function UserModal({ user, onClose, onSave }: any) {
           <div className="modal-body">
             <div className="form-grid">
               <div className="form-group">
-                <label className="form-label">Full Name *</label>
+                <label className="form-label" htmlFor="user-form-name">Full Name *</label>
                 <input
+                  id="user-form-name"
                   type="text"
                   required
                   className="input-control"
@@ -3155,8 +3179,9 @@ function UserModal({ user, onClose, onSave }: any) {
                 />
               </div>
               <div className="form-group">
-                <label className="form-label">Username *</label>
+                <label className="form-label" htmlFor="user-form-username">Username *</label>
                 <input
+                  id="user-form-username"
                   type="text"
                   required
                   className="input-control"
@@ -3167,8 +3192,9 @@ function UserModal({ user, onClose, onSave }: any) {
               </div>
               {!user && (
                 <div className="form-group full-width">
-                  <label className="form-label">Initial Password (min 6 chars) *</label>
+                  <label className="form-label" htmlFor="user-form-password">Initial Password (min 6 chars) *</label>
                   <input
+                    id="user-form-password"
                     type="password"
                     required
                     minLength={6}
@@ -3180,16 +3206,16 @@ function UserModal({ user, onClose, onSave }: any) {
                 </div>
               )}
               <div className="form-group">
-                <label className="form-label">Access Role *</label>
-                <select className="select-control" value={role} onChange={e => setRole(e.target.value)}>
+                <label className="form-label" htmlFor="user-form-role">Access Role *</label>
+                <select id="user-form-role" className="select-control" value={role} onChange={e => setRole(e.target.value)}>
                   <option value="Admin">Admin</option>
                   <option value="Manager">Manager</option>
                   <option value="Staff">Staff</option>
                 </select>
               </div>
               <div className="form-group">
-                <label className="form-label">Account Status</label>
-                <select className="select-control" value={status} onChange={e => setStatus(e.target.value)}>
+                <label className="form-label" htmlFor="user-form-status">Account Status</label>
+                <select id="user-form-status" className="select-control" value={status} onChange={e => setStatus(e.target.value)}>
                   <option value="Active">Active</option>
                   <option value="Disabled">Disabled</option>
                 </select>
@@ -3198,7 +3224,7 @@ function UserModal({ user, onClose, onSave }: any) {
           </div>
           <div className="modal-footer" style={{ display: 'flex', justifyContent: 'flex-end', gap: '8px' }}>
             <button type="button" className="btn btn-outline" onClick={onClose}>Cancel</button>
-            <button type="submit" className="btn btn-primary">{user ? 'Update Profile' : 'Create User'}</button>
+            <button id="user-form-save-btn" type="submit" className="btn btn-primary">{user ? 'Update Profile' : 'Create User'}</button>
           </div>
         </form>
       </div>
@@ -3225,8 +3251,9 @@ function ResetPasswordModal({ user, onClose, onSave }: any) {
         <form onSubmit={handleSubmit}>
           <div className="modal-body">
             <div className="form-group">
-              <label className="form-label">New Password (min 6 chars) *</label>
+              <label className="form-label" htmlFor="reset-form-password">New Password (min 6 chars) *</label>
               <input
+                id="reset-form-password"
                 type="password"
                 required
                 minLength={6}
@@ -3240,7 +3267,7 @@ function ResetPasswordModal({ user, onClose, onSave }: any) {
           </div>
           <div className="modal-footer" style={{ display: 'flex', justifyContent: 'flex-end', gap: '8px' }}>
             <button type="button" className="btn btn-outline" onClick={onClose}>Cancel</button>
-            <button type="submit" className="btn btn-primary">Reset Password</button>
+            <button id="reset-form-save-btn" type="submit" className="btn btn-primary">Reset Password</button>
           </div>
         </form>
       </div>

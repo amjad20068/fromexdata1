@@ -77,7 +77,7 @@ export async function POST(req: NextRequest) {
     }
 
     const body = await req.json().catch(() => ({}));
-    const { name, username, password, role, status } = body;
+    const { name, username, email, password, role, status } = body;
 
     if (!name || !username || !password) {
       return apiError('Name, username, and password are required', 400);
@@ -102,11 +102,21 @@ export async function POST(req: NextRequest) {
       return apiError(`Username "@${cleanUsername}" is already taken. Please choose another.`, 409);
     }
 
+    let cleanEmail: string | undefined = undefined;
+    if (email && String(email).trim()) {
+      cleanEmail = String(email).trim().toLowerCase();
+      const existingEmail = await User.findOne({ email: cleanEmail });
+      if (existingEmail) {
+        return apiError(`Email "${cleanEmail}" is already registered.`, 409);
+      }
+    }
+
     const passwordHash = await bcrypt.hash(String(password), 10);
 
     const newUser = await User.create({
       name: String(name).trim(),
       username: cleanUsername,
+      email: cleanEmail,
       password_hash: passwordHash,
       role: assignedRole,
       status: assignedStatus
