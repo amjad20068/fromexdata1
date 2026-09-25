@@ -6,9 +6,11 @@ dotenv.config({ path: '.env.local' });
 dotenv.config({ path: '.env' });
 
 async function seed() {
-  const uri = process.env.MONGODB_URI;
-  if (!uri) {
-    console.error('❌ MONGODB_URI not found in environment.');
+  const uri = process.env.MONGODB_URI?.trim();
+  if (!uri || uri === '<MY_MONGODB_ATLAS_CONNECTION_STRING>' || uri.startsWith('<') || (!uri.startsWith('mongodb://') && !uri.startsWith('mongodb+srv://'))) {
+    console.error('❌ MONGODB_URI not found or set to placeholder in environment.');
+    console.error('   Please define MONGODB_URI with your actual MongoDB Atlas connection string in .env.local:');
+    console.error('   MONGODB_URI="mongodb+srv://<username>:<password>@<cluster>.mongodb.net/fromex?retryWrites=true&w=majority"');
     process.exit(1);
   }
 

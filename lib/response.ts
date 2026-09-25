@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { sanitizeMongoError } from './mongodb';
 
 export function apiSuccess(data: any = {}, message: string = 'Success', status: number = 200) {
   const payload: any = {
@@ -12,9 +13,10 @@ export function apiSuccess(data: any = {}, message: string = 'Success', status: 
 }
 
 export function apiError(message: string = 'Something went wrong', status: number = 500, errors: any = null) {
+  const safeMessage = sanitizeMongoError(message);
   const payload: any = {
     success: false,
-    message
+    message: safeMessage
   };
 
   if (errors) {

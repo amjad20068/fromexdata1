@@ -15,9 +15,11 @@ interface IUserDoc {
 }
 
 async function seedAdmin() {
-  const uri = process.env.MONGODB_URI;
-  if (!uri) {
-    console.error('❌ MONGODB_URI is not defined in environment variables.');
+  const uri = process.env.MONGODB_URI?.trim();
+  if (!uri || uri === '<MY_MONGODB_ATLAS_CONNECTION_STRING>' || uri.startsWith('<') || (!uri.startsWith('mongodb://') && !uri.startsWith('mongodb+srv://'))) {
+    console.error('❌ MONGODB_URI is not defined or is still set to placeholder in .env.local.');
+    console.error('   Please define MONGODB_URI with your actual MongoDB Atlas connection string:');
+    console.error('   MONGODB_URI="mongodb+srv://<username>:<password>@<cluster>.mongodb.net/fromex?retryWrites=true&w=majority"');
     process.exit(1);
   }
 

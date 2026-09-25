@@ -11,11 +11,28 @@ export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [isCheckingAuth, setIsCheckingAuth] = useState(true);
+  const [dbStatus, setDbStatus] = useState<'checking' | 'connected' | 'unconfigured' | 'error'>('checking');
 
-  // If already authenticated, redirect to main application
+  // Verify database health and check existing session
   useEffect(() => {
     const checkExistingAuth = async () => {
       try {
+        // Safe database connection check
+        try {
+          const healthRes = await fetch('/api/health');
+          const healthData = await healthRes.json().catch(() => ({}));
+          if (healthData.status === 'unconfigured') {
+            setDbStatus('unconfigured');
+            setErrorMessage(healthData.message || 'Please configure MONGODB_URI in your .env.local file or Vercel Environment Variables.');
+          } else if (healthData.status === 'online') {
+            setDbStatus('connected');
+          } else {
+            setDbStatus('error');
+          }
+        } catch {
+          setDbStatus('error');
+        }
+
         const token = localStorage.getItem('fromex_token');
         if (token) {
           const res = await fetch('/api/auth/me', {
@@ -223,13 +240,17 @@ export default function LoginPage() {
               style={{
                 width: '6px',
                 height: '6px',
-                background: '#34d399',
+                background: dbStatus === 'connected' ? '#34d399' : dbStatus === 'unconfigured' ? '#fbbf24' : '#f87171',
                 borderRadius: '50%',
                 display: 'inline-block',
-                boxShadow: '0 0 6px #34d399'
+                boxShadow: `0 0 6px ${dbStatus === 'connected' ? '#34d399' : dbStatus === 'unconfigured' ? '#fbbf24' : '#f87171'}`
               }}
             />
-            MongoDB Atlas Connected &bull; Admin Portal
+            {dbStatus === 'connected'
+              ? 'MongoDB Atlas Connected • Admin Portal'
+              : dbStatus === 'unconfigured'
+              ? 'MongoDB Configuration Required • Admin Portal'
+              : 'MongoDB Offline • Admin Portal'}
           </div>
         </div>
 
