@@ -78,6 +78,20 @@ async function runAllTests() {
   const adminToken = adminLogin.body.data.token;
   const adminAuth = { Authorization: `Bearer ${adminToken}` };
 
+  // Ensure test profiles (manager, staff) exist
+  await request('/api/users', { method: 'POST', headers: adminAuth }, {
+    name: 'Pooja Sharma',
+    username: 'manager',
+    password: 'fromex123',
+    role: 'Manager'
+  }).catch(() => {});
+  await request('/api/users', { method: 'POST', headers: adminAuth }, {
+    name: 'Rohan Verma',
+    username: 'staff',
+    password: 'fromex123',
+    role: 'Staff'
+  }).catch(() => {});
+
   // Secondary admin login (Vikram)
   const vikramLogin = await request('/api/auth/login', { method: 'POST' }, {
     username: 'admin',

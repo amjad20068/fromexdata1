@@ -1,7 +1,17 @@
 /* ===================================================
    RESPONSIVE DESIGN SYSTEM
-   Supports: 320px, 375px, 390px, 414px, 768px, 1024px, 1366px, 1920px
+   Pixel-Perfect Mobile Alignment & Cross-Device Layouts
+   Supports: 320px, 360px, 375px, 390px, 414px, 768px, 1024px, 1440px, 1920px
    =================================================== */
+
+/* Root & Global Overflow Prevention */
+html,
+body,
+.fromex-app {
+  max-width: 100vw;
+  overflow-x: clip;
+  width: 100%;
+}
 
 /* Tablet & Smaller (< 1024px) */
 @media (max-width: 1024px) {
@@ -10,7 +20,7 @@
   }
 
   .header-center {
-    display: none; /* Collapsed into mobile date/time banner or sub-bar */
+    display: none; /* Hide center clock on tablets and mobile to give full space to brand & actions */
   }
 
   .dashboard-content-grid {
@@ -27,85 +37,265 @@
   }
 }
 
-/* Tablets & Mobile Screens (< 768px) */
+/* Mobile Devices & Tablets (< 768px) */
 @media (max-width: 768px) {
+  /* --- 1. CORPORATE HEADER (Clean 2-Row Alignment) --- */
   .app-header {
     height: auto;
     padding: 10px 14px;
+    display: flex;
     flex-wrap: wrap;
-    gap: 10px;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px 12px;
   }
 
-  .brand-title {
-    font-size: 18px;
+  /* Row 1 Left: Brand Logo & Title */
+  .brand-section {
+    order: 1;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
   }
 
   .brand-logo-icon {
-    width: 32px;
-    height: 32px;
-    font-size: 17px;
+    width: 30px;
+    height: 30px;
+    font-size: 15px;
+    border-radius: 6px;
   }
 
-  /* User profile compact */
+  .brand-title {
+    font-size: 16px;
+    letter-spacing: 0.8px;
+    line-height: 1.1;
+  }
+
+  .brand-subtitle {
+    display: none; /* Hidden on mobile for clean minimalist header */
+  }
+
+  /* Header Actions Container unwraps children into header grid */
+  .header-actions {
+    display: contents;
+  }
+
+  /* Row 1 Right: User Avatar + Name & Logout Button */
+  .header-actions-user {
+    order: 2;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-left: auto;
+    flex-shrink: 0;
+  }
+
+  .user-profile-btn {
+    padding: 3px 6px;
+    height: 30px;
+    gap: 5px;
+    flex-shrink: 0;
+  }
+
+  .user-avatar {
+    width: 22px;
+    height: 22px;
+    font-size: 10.5px;
+  }
+
+  .user-name {
+    font-size: 11px;
+    max-width: 60px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
   .user-role,
   .user-dropdown-arrow {
     display: none;
   }
 
-  .user-profile-btn {
-    padding: 4px 8px;
+  .header-logout-btn {
+    height: 30px;
+    padding: 3px 7px !important;
+    font-size: 11px !important;
+    margin-left: 0 !important;
+    border-radius: var(--radius-sm);
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    flex-shrink: 0;
   }
 
-  .user-name {
-    font-size: 12px;
-  }
-
-  /* Mobile Live Clock Bar */
-  .mobile-time-bar {
-    display: flex !important;
-    background: #1e293b;
-    color: #ffffff;
-    padding: 6px 14px;
-    font-size: 11px;
+  /* Row 2: Status Badge (Right) & Clear Data Button (Left) */
+  .header-actions-status {
+    order: 3;
+    width: 100%;
+    display: flex;
     align-items: center;
     justify-content: space-between;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-top: 6px;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
   }
 
-  /* Navigation on mobile */
+  .sync-status-badge {
+    height: 28px;
+    padding: 3px 8px;
+    font-size: 11px;
+    gap: 5px;
+    order: 2;
+  }
+
+  .header-clear-btn {
+    height: 28px;
+    padding: 3px 8px;
+    font-size: 11px;
+    gap: 4px;
+    order: 1;
+  }
+
+  /* --- 2. NAVIGATION BAR (Smooth Touch Horizontal Scroll) --- */
   .app-navbar {
-    padding: 0 12px;
-    height: auto;
+    padding: 0 8px;
+    height: 46px;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE/Edge */
+    position: sticky;
+    top: 0;
+    z-index: 90;
+    background: #ffffff;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  }
+
+  .app-navbar::-webkit-scrollbar {
+    display: none; /* Chrome, Safari */
   }
 
   .nav-tabs {
-    width: 100%;
-    justify-content: flex-start;
-    gap: 2px;
+    width: max-content;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    height: 100%;
+    padding: 0 4px;
   }
 
   .nav-tab {
-    padding: 10px 14px;
+    flex-shrink: 0;
+    padding: 8px 12px;
     font-size: 12.5px;
+    font-weight: 600;
     white-space: nowrap;
-    border-bottom-width: 2px;
+    border-bottom: 2.5px solid transparent;
+    border-radius: 6px 6px 0 0;
+    min-height: 42px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.15s ease;
   }
 
-  /* Toolbar wrapping */
+  .nav-tab.active {
+    color: var(--primary);
+    border-bottom-color: var(--primary);
+    background: rgba(37, 99, 235, 0.05);
+  }
+
+  /* --- 3. MAIN CONTENT CONTAINER & VIEW HEADERS --- */
+  .app-main {
+    padding: 12px 10px;
+    gap: 14px;
+    width: 100%;
+    max-width: 100vw;
+    box-sizing: border-box;
+    overflow-x: clip;
+  }
+
   .view-header {
     flex-direction: column;
-    align-items: flex-start;
+    align-items: stretch;
+    gap: 12px;
+    width: 100%;
+  }
+
+  .view-title-group h1 {
+    font-size: 19px;
+    line-height: 1.2;
+  }
+
+  .view-title-group p {
+    font-size: 12px;
+    line-height: 1.4;
+    color: #64748b;
+  }
+
+  /* Action Buttons Grid on Mobile */
+  .view-toolbar {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+
+  .view-toolbar .btn {
+    width: 100%;
+    justify-content: center;
+    padding: 8px 10px;
+    font-size: 12px;
+    min-height: 38px;
+  }
+
+  /* --- 4. KPI SUMMARY METRIC CARDS (2-Column Mobile Grid) --- */
+  .kpi-grid,
+  .acc-summary-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
     gap: 10px;
   }
 
-  .view-toolbar {
+  .kpi-card {
+    padding: 12px 14px;
+    gap: 6px;
+  }
+
+  .kpi-top {
+    margin-bottom: 2px;
+  }
+
+  .kpi-label {
+    font-size: 10.5px;
+    letter-spacing: 0.3px;
+  }
+
+  .kpi-icon {
+    width: 26px;
+    height: 26px;
+    font-size: 13px;
+  }
+
+  .kpi-val {
+    font-size: 20px;
+    line-height: 1.1;
+  }
+
+  .kpi-subtext {
+    font-size: 11px;
+    line-height: 1.3;
+  }
+
+  /* --- 5. EXCEL DATA GRID & TOOLBAR --- */
+  .excel-container {
     width: 100%;
-    justify-content: flex-start;
+    max-width: 100%;
+    overflow: hidden;
+    border-radius: var(--radius-md);
   }
 
   .excel-toolbar {
+    padding: 10px 12px;
     flex-direction: column;
     align-items: stretch;
     gap: 10px;
@@ -114,65 +304,183 @@
   .excel-toolbar-left,
   .excel-toolbar-right {
     width: 100%;
-    justify-content: space-between;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+    justify-content: flex-start;
   }
 
   .search-input {
-    width: 100%;
-    min-width: unset;
+    width: 100% !important;
+    min-width: 100% !important;
+    height: 38px;
+    font-size: 13px;
   }
 
-  /* Form columns stack on mobile */
-  .form-row,
-  .form-row-3 {
-    grid-template-columns: 1fr !important;
-    gap: 10px;
+  .excel-filter-select,
+  .select-control {
+    flex: 1 1 calc(50% - 4px);
+    min-width: 120px;
+    height: 36px;
+    font-size: 12.5px;
   }
 
-  /* Modal full screen on mobile */
-  .modal-container {
-    max-width: 100%;
-    height: auto;
-    max-height: 95vh;
-  }
-
-  .btn {
-    min-height: 38px;
+  .table-stats-pill {
+    margin-left: auto;
+    font-size: 11.5px;
+    padding: 3px 8px;
   }
 
   .excel-scroll-wrapper {
     max-height: 480px;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
   }
-}
 
-/* Small Smart Phones (< 480px: 320px, 375px, 390px, 414px) */
-@media (max-width: 480px) {
-  .kpi-grid {
-    grid-template-columns: 1fr;
+  .excel-table {
+    min-width: 650px;
+  }
+
+  .excel-table th,
+  .excel-table td {
+    padding: 8px 10px;
+    font-size: 12px;
+  }
+
+  /* Action buttons inside table */
+  .excel-table .btn-sm {
+    padding: 3px 6px;
+    font-size: 11px;
+  }
+
+  /* --- 6. ACCOUNTING SUB-TABS & SETTINGS SUBNAV --- */
+  .subnav-tabs {
+    display: flex;
+    gap: 6px;
+    width: 100%;
+  }
+
+  .subnav-tab {
+    flex: 1;
+    justify-content: center;
+    text-align: center;
+    padding: 8px 12px;
+    font-size: 12.5px;
+  }
+
+  .settings-subnav {
+    display: flex;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    gap: 6px;
+    padding-bottom: 6px;
+    margin-bottom: 12px;
+    width: 100%;
+  }
+
+  .settings-subnav::-webkit-scrollbar {
+    display: none;
+  }
+
+  .settings-subnav button,
+  .settings-subnav .subnav-tab {
+    flex-shrink: 0;
+    white-space: nowrap;
+    padding: 7px 12px;
+    font-size: 12px;
+  }
+
+  .settings-grid,
+  .settings-panel-grid {
+    grid-template-columns: 1fr !important;
     gap: 12px;
   }
 
-  .kpi-card {
-    padding: 14px;
+  .db-monitor-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 10px;
   }
 
-  .kpi-val {
-    font-size: 22px;
-  }
-
-  .view-title-group h1 {
-    font-size: 19px;
-  }
-
-  .app-main {
+  .db-metric-card {
     padding: 12px;
+  }
+
+  .db-metric-val {
+    font-size: 18px;
+  }
+
+  /* --- 7. MODALS & FORMS (Mobile Bottom-Sheet Experience) --- */
+  .modal-backdrop {
+    padding: 0;
+    align-items: flex-end;
+  }
+
+  .modal-container {
+    width: 100% !important;
+    max-width: 100% !important;
+    border-radius: 18px 18px 0 0 !important;
+    max-height: 92vh !important;
+    margin: 0;
+    border-bottom: none;
+    box-shadow: 0 -8px 30px rgba(0, 0, 0, 0.25);
+  }
+
+  .modal-header {
+    padding: 14px 18px;
+    border-top-left-radius: 18px;
+    border-top-right-radius: 18px;
+  }
+
+  .modal-title {
+    font-size: 15px;
+  }
+
+  .modal-body {
+    padding: 16px 18px;
+    max-height: calc(92vh - 130px);
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .modal-footer {
+    padding: 12px 18px;
+    flex-direction: column-reverse;
+    gap: 8px;
+  }
+
+  .modal-footer .btn {
+    width: 100%;
+    min-height: 42px;
+    font-size: 13.5px;
+  }
+
+  /* Stack all form inputs on mobile */
+  .form-row,
+  .form-row-3,
+  .form-grid {
+    grid-template-columns: 1fr !important;
     gap: 12px;
   }
 
+  .form-control,
+  .form-select,
+  input,
+  select,
+  textarea {
+    font-size: 14px !important; /* Prevents auto-zoom on iOS Safari */
+    min-height: 40px;
+  }
+
+  /* --- 8. TOASTS & FLOATING UNDO BANNER --- */
   .toast-container {
     left: 12px;
     right: 12px;
     bottom: 12px;
+    width: auto;
   }
 
   .toast {
@@ -182,33 +490,52 @@
     padding: 10px 14px;
   }
 
-  .modal-footer {
-    flex-direction: column-reverse;
-  }
-
-  .modal-footer .btn {
-    width: 100%;
-  }
-
-  /* Mobile Floating Undo Banner */
   .floating-undo-banner {
     min-width: unset;
-    width: calc(100% - 24px);
+    left: 12px;
+    right: 12px;
+    width: auto;
     bottom: 12px;
     flex-direction: column;
     align-items: stretch;
-    padding: 14px;
-    gap: 12px;
+    padding: 12px 14px;
+    gap: 10px;
   }
 
   .floating-undo-actions {
+    display: flex;
     justify-content: space-between;
+    width: 100%;
+  }
+}
+
+/* Extra Compact Phones (< 360px: 320px screens) */
+@media (max-width: 360px) {
+  .brand-title {
+    font-size: 15px;
   }
 
-  .settings-subnav {
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    white-space: nowrap;
+  .user-name {
+    max-width: 75px;
+  }
+
+  .kpi-grid,
+  .acc-summary-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .view-toolbar {
+    grid-template-columns: 1fr;
+  }
+
+  .db-monitor-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .excel-filter-select,
+  .select-control {
+    flex: 1 1 100%;
+    min-width: 100%;
   }
 }
 

@@ -143,6 +143,13 @@ body {
   gap: 14px;
 }
 
+.header-actions-status,
+.header-actions-user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
 .sync-status-badge {
   display: flex;
   align-items: center;

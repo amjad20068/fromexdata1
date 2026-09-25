@@ -499,17 +499,6 @@ export default function FromexApplication() {
 
   return (
     <div className="fromex-app">
-      {/* Mobile Live Time Banner */}
-      <div className="mobile-time-bar">
-        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-          <span className="live-indicator-icon"></span>
-          <span>{liveTime.date || 'Wednesday, 16 September 2026'}</span>
-        </div>
-        <div style={{ fontFamily: 'var(--font-mono)', fontWeight: 700, color: '#38bdf8' }}>
-          {liveTime.time || '--:--:-- --'}
-        </div>
-      </div>
-
       {/* Corporate Header */}
       <header className="app-header">
         <div className="brand-section">
@@ -536,57 +525,61 @@ export default function FromexApplication() {
 
         {/* Header Right Actions */}
         <div className="header-actions">
-          <button
-            type="button"
-            id="header-btn-clear-data"
-            className="header-clear-btn"
-            onClick={handleClearData}
-            title="Clear operational records with instant undo protection"
-          >
-            <span>🗑️</span> Clear Data
-          </button>
+          <div className="header-actions-status">
+            <button
+              type="button"
+              id="header-btn-clear-data"
+              className="header-clear-btn"
+              onClick={handleClearData}
+              title="Clear operational records with instant undo protection"
+            >
+              <span>🗑️</span> Clear Data
+            </button>
 
-          <div id="sync-status-badge" className="sync-status-badge">
-            <span className="live-indicator-icon"></span> MongoDB Atlas Active
+            <div id="sync-status-badge" className="sync-status-badge">
+              <span className="live-indicator-icon"></span> MongoDB Atlas Active
+            </div>
           </div>
 
-          <button
-            type="button"
-            id="user-profile-btn"
-            className="user-profile-btn"
-            onClick={() => {
-              apiFetch('/api/auth/users').then(res => {
-                setModalType('user-switcher');
-                setModalData(res.users || []);
-              });
-            }}
-            title="Switch Authorized User"
-          >
-            <div id="header-user-avatar" className="user-avatar">
-              {currentUser.name === 'FROMEX' ? 'FX' : currentUser.name.charAt(0)}
-            </div>
-            <div className="user-meta">
-              <span id="header-user-name" className="user-name">{currentUser.name}</span>
-              <span id="header-user-role" className="user-role">{currentUser.role}</span>
-            </div>
-            <span className="user-dropdown-arrow">&#9662;</span>
-          </button>
+          <div className="header-actions-user">
+            <button
+              type="button"
+              id="user-profile-btn"
+              className="user-profile-btn"
+              onClick={() => {
+                apiFetch('/api/auth/users').then(res => {
+                  setModalType('user-switcher');
+                  setModalData(res.users || []);
+                });
+              }}
+              title="Switch Authorized User"
+            >
+              <div id="header-user-avatar" className="user-avatar">
+                {currentUser.name === 'FROMEX' ? 'FX' : currentUser.name.charAt(0)}
+              </div>
+              <div className="user-meta">
+                <span id="header-user-name" className="user-name">{currentUser.name}</span>
+                <span id="header-user-role" className="user-role">{currentUser.role}</span>
+              </div>
+              <span className="user-dropdown-arrow">&#9662;</span>
+            </button>
 
-          <button
-            type="button"
-            id="header-logout-btn"
-            className="header-clear-btn"
-            onClick={handleLogout}
-            title="Log Out of System"
-            style={{
-              background: '#fef2f2',
-              color: '#dc2626',
-              border: '1px solid #fecaca',
-              marginLeft: '4px'
-            }}
-          >
-            <span>🚪</span> Logout
-          </button>
+            <button
+              type="button"
+              id="header-logout-btn"
+              className="header-clear-btn header-logout-btn"
+              onClick={handleLogout}
+              title="Log Out of System"
+              style={{
+                background: '#fef2f2',
+                color: '#dc2626',
+                border: '1px solid #fecaca',
+                marginLeft: '4px'
+              }}
+            >
+              <span>🚪</span> Logout
+            </button>
+          </div>
         </div>
       </header>
 
@@ -1272,7 +1265,7 @@ export default function FromexApplication() {
             </div>
 
             {/* Accounting Summary Strip */}
-            <div className="kpi-grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(210px, 1fr))' }}>
+            <div className="kpi-grid acc-summary-grid">
               <div className="kpi-card kpi-green" style={{ padding: '12px 16px' }}>
                 <span className="kpi-label">Total Cash Inflow</span>
                 <div id="acc-summary-income" className="kpi-val currency" style={{ fontSize: '19px', color: '#059669' }}>

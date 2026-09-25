@@ -99,6 +99,10 @@
   gap: 16px;
 }
 
+.acc-summary-grid {
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+}
+
 .kpi-card {
   background: var(--bg-card);
   border: 1px solid var(--border-subtle);

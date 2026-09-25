@@ -231,6 +231,34 @@ async function runBrowserTests() {
     console.log(`  📸 Saved public/${vp.file}`);
   }
 
+  // Mobile Views Deep Dive (375x812)
+  console.log('\n📱 Deep Diving Mobile Views (375x812)...');
+  await page.setViewport({ width: 375, height: 812 });
+
+  // Employees Tab
+  await safeClick(page, '#nav-tab-employees');
+  await new Promise(r => setTimeout(r, 600));
+  await page.screenshot({ path: path.join(__dirname, 'public', 'preview_mobile_employees_375.png') });
+  console.log('  📸 Saved public/preview_mobile_employees_375.png');
+
+  // Attendance Tab
+  await safeClick(page, '#nav-tab-attendance');
+  await new Promise(r => setTimeout(r, 600));
+  await page.screenshot({ path: path.join(__dirname, 'public', 'preview_mobile_attendance_375.png') });
+  console.log('  📸 Saved public/preview_mobile_attendance_375.png');
+
+  // Accounting Tab
+  await safeClick(page, '#nav-tab-accounting');
+  await new Promise(r => setTimeout(r, 600));
+  await page.screenshot({ path: path.join(__dirname, 'public', 'preview_mobile_accounting_375.png') });
+  console.log('  📸 Saved public/preview_mobile_accounting_375.png');
+
+  // Settings Tab
+  await safeClick(page, '#nav-tab-settings');
+  await new Promise(r => setTimeout(r, 600));
+  await page.screenshot({ path: path.join(__dirname, 'public', 'preview_mobile_settings_375.png') });
+  console.log('  📸 Saved public/preview_mobile_settings_375.png');
+
   console.log('\n--- BROWSER VERIFICATION SUMMARY ---');
   console.log(`Total Browser Console Errors: ${consoleErrors.length}`);
   if (consoleErrors.length > 0) {

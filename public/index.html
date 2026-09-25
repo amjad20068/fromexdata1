@@ -14,14 +14,6 @@
 </head>
 <body>
 
-  <!-- Mobile Live Time Banner (Visible on mobile/tablets) -->
-  <div class="mobile-time-bar" style="display: none;">
-    <div style="display: flex; align-items: center; gap: 6px;">
-      <span class="live-indicator-icon"></span>
-      <span data-live-date>Wednesday, 16 September 2026</span>
-    </div>
-    <div data-live-clock style="font-family: var(--font-mono); font-weight: 700; color: #38bdf8;">--:--:-- --</div>
-  </div>
 
   <!-- Corporate Header -->
   <header class="app-header">
@@ -49,22 +41,26 @@
 
     <!-- Header Right Actions: Real-time status & User Profile -->
     <div class="header-actions">
-      <button type="button" id="header-btn-clear-data" class="header-clear-btn" title="Clear operational attendance and accounting records with instant undo protection">
-        <span>🗑️</span> Clear Data
-      </button>
+      <div class="header-actions-status">
+        <button type="button" id="header-btn-clear-data" class="header-clear-btn" title="Clear operational attendance and accounting records with instant undo protection">
+          <span>🗑️</span> Clear Data
+        </button>
 
-      <div id="sync-status-badge" class="sync-status-badge">
-        <span class="live-indicator-icon"></span> Live Shared Sync
+        <div id="sync-status-badge" class="sync-status-badge">
+          <span class="live-indicator-icon"></span> Live Shared Sync
+        </div>
       </div>
 
-      <button type="button" id="user-profile-btn" class="user-profile-btn" title="Switch Authorized User">
-        <div id="header-user-avatar" class="user-avatar">FX</div>
-        <div class="user-meta">
-          <span id="header-user-name" class="user-name">FROMEX</span>
-          <span id="header-user-role" class="user-role">Admin</span>
-        </div>
-        <span class="user-dropdown-arrow">&#9662;</span>
-      </button>
+      <div class="header-actions-user">
+        <button type="button" id="user-profile-btn" class="user-profile-btn" title="Switch Authorized User">
+          <div id="header-user-avatar" class="user-avatar">FX</div>
+          <div class="user-meta">
+            <span id="header-user-name" class="user-name">FROMEX</span>
+            <span id="header-user-role" class="user-role">Admin</span>
+          </div>
+          <span class="user-dropdown-arrow">&#9662;</span>
+        </button>
+      </div>
     </div>
   </header>
 
