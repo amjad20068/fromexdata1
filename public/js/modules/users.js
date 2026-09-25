@@ -344,8 +344,10 @@ export function openAddUserModal() {
       return;
     }
 
-    if (!/^[a-z0-9_.-]{3,30}$/.test(username)) {
-      toast.error('Username must be 3-30 characters (letters, numbers, underscore, or dot).');
+    const isEmail = /^[a-z0-9_.+-]+@[a-z0-9-]+\.[a-z0-9-.]+$/i.test(username);
+    const isStandardUsername = /^[a-z0-9_.-]{3,50}$/i.test(username);
+    if (!isEmail && !isStandardUsername) {
+      toast.error('Username must be 3-50 characters (letters, numbers, underscore, dot) or a valid email address.');
       return;
     }
 
@@ -452,8 +454,10 @@ export function openEditUserModal(user) {
       return;
     }
 
-    if (!/^[a-z0-9_.-]{3,30}$/.test(username)) {
-      toast.error('Username must be 3-30 characters (letters, numbers, underscore, or dot).');
+    const isEmail = /^[a-z0-9_.+-]+@[a-z0-9-]+\.[a-z0-9-.]+$/i.test(username);
+    const isStandardUsername = /^[a-z0-9_.-]{3,50}$/i.test(username);
+    if (!isEmail && !isStandardUsername) {
+      toast.error('Username must be 3-50 characters (letters, numbers, underscore, dot) or a valid email address.');
       return;
     }
 

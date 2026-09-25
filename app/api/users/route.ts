@@ -89,24 +89,36 @@ export async function POST(req: NextRequest) {
 
     const assignedRole = role && VALID_ROLES.includes(role) ? role : 'Staff';
     const assignedStatus = status && VALID_STATUSES.includes(status) ? status : 'Active';
-    const cleanUsername = String(username).trim().toLowerCase().replace(/^@+/, '');
+    const cleanInput = String(username).trim().toLowerCase();
+    const cleanUsername = cleanInput.startsWith('@') && !cleanInput.includes('.') ? cleanInput.replace(/^@+/, '') : cleanInput;
 
-    if (!/^[a-z0-9_.-]{3,30}$/.test(cleanUsername)) {
-      return apiError('Username must be 3-30 characters with letters, numbers, underscore, or dot', 400);
+    const isEmail = /^[a-z0-9_.+-]+@[a-z0-9-]+\.[a-z0-9-.]+$/i.test(cleanUsername);
+    const isStandardUsername = /^[a-z0-9_.-]{3,50}$/i.test(cleanUsername);
+
+    if (!isEmail && !isStandardUsername) {
+      return apiError('Username must be 3-50 characters with letters, numbers, underscore, dot or a valid email address', 400);
     }
 
     await connectToDatabase();
 
-    const existing = await User.findOne({ username: cleanUsername });
-    if (existing) {
-      return apiError(`Username "@${cleanUsername}" is already taken. Please choose another.`, 409);
-    }
-
     let cleanEmail: string | undefined = undefined;
     if (email && String(email).trim()) {
       cleanEmail = String(email).trim().toLowerCase();
-      const existingEmail = await User.findOne({ email: cleanEmail });
-      if (existingEmail) {
+    } else if (isEmail) {
+      cleanEmail = cleanUsername;
+    }
+
+    const existing = await User.findOne({
+      $or: [
+        { username: cleanUsername },
+        ...(cleanEmail ? [{ email: cleanEmail }] : [])
+      ]
+    });
+    if (existing) {
+      if (existing.username === cleanUsername) {
+        return apiError(`Username "${cleanUsername}" is already taken. Please choose another.`, 409);
+      }
+      if (cleanEmail && existing.email === cleanEmail) {
         return apiError(`Email "${cleanEmail}" is already registered.`, 409);
       }
     }

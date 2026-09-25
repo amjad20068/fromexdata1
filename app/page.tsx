@@ -3179,13 +3179,13 @@ function UserModal({ user, onClose, onSave }: any) {
                 />
               </div>
               <div className="form-group">
-                <label className="form-label" htmlFor="user-form-username">Username *</label>
+                <label className="form-label" htmlFor="user-form-username">Username or Email *</label>
                 <input
                   id="user-form-username"
                   type="text"
                   required
                   className="input-control"
-                  placeholder="e.g. rohitv"
+                  placeholder="e.g. amjad or user@gmail.com"
                   value={username}
                   onChange={e => setUsername(e.target.value)}
                 />

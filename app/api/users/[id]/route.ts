@@ -69,23 +69,30 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
     }
 
     if (username && String(username).trim() !== '') {
-      const cleanUsername = String(username).trim().toLowerCase().replace(/^@+/, '');
+      const cleanInput = String(username).trim().toLowerCase();
+      const cleanUsername = cleanInput.startsWith('@') && !cleanInput.includes('.') ? cleanInput.replace(/^@+/, '') : cleanInput;
 
       if (cleanUsername !== target.username) {
         if ((target.username === 'fromex' || target.username === 'admin') && cleanUsername !== target.username) {
           return apiError('The primary system admin username cannot be changed', 400);
         }
 
-        if (!/^[a-z0-9_.-]{3,30}$/.test(cleanUsername)) {
-          return apiError('Username must be 3-30 characters with alphanumeric, underscore or dash characters', 400);
+        const isEmail = /^[a-z0-9_.+-]+@[a-z0-9-]+\.[a-z0-9-.]+$/i.test(cleanUsername);
+        const isStandardUsername = /^[a-z0-9_.-]{3,50}$/i.test(cleanUsername);
+
+        if (!isEmail && !isStandardUsername) {
+          return apiError('Username must be 3-50 characters with letters, numbers, underscore, dot or a valid email address', 400);
         }
 
         const duplicateCheck = await User.findOne({ username: cleanUsername, _id: { $ne: target._id } });
         if (duplicateCheck) {
-          return apiError(`Username "@${cleanUsername}" is already taken by another account`, 409);
+          return apiError(`Username "${cleanUsername}" is already taken by another account`, 409);
         }
 
         target.username = cleanUsername;
+        if (isEmail && !target.email) {
+          target.email = cleanUsername;
+        }
       }
     }
 
