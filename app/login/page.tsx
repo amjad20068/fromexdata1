@@ -102,11 +102,6 @@ export default function LoginPage() {
     }
   };
 
-  const fillQuickCredentials = (u: string, p: string) => {
-    setUsernameOrEmail(u);
-    setPassword(p);
-    setErrorMessage('');
-  };
 
   if (isCheckingAuth) {
     return (
@@ -487,73 +482,6 @@ export default function LoginPage() {
             </button>
           </form>
 
-          {/* Quick-Fill Helper for Authorized Admin Roles */}
-          <div
-            style={{
-              marginTop: '24px',
-              paddingTop: '20px',
-              borderTop: '1px solid var(--border-subtle, #e2e8f0)',
-              fontSize: '12px',
-              color: 'var(--text-muted, #64748b)'
-            }}
-          >
-            <div style={{ fontWeight: 600, marginBottom: '8px', color: 'var(--secondary, #0f172a)' }}>
-              Quick Login Helper (Company Profiles):
-            </div>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
-              <button
-                type="button"
-                id="btn-quick-admin"
-                onClick={() => fillQuickCredentials('fromex', 'fromex123')}
-                style={{
-                  background: 'var(--primary-light, #eff6ff)',
-                  color: 'var(--primary, #1e3a8a)',
-                  border: '1px solid var(--primary-border, #bfdbfe)',
-                  borderRadius: 'var(--radius-sm, 4px)',
-                  padding: '4px 10px',
-                  fontSize: '11px',
-                  fontWeight: 600,
-                  cursor: 'pointer'
-                }}
-              >
-                Root Admin: @fromex
-              </button>
-              <button
-                type="button"
-                id="btn-quick-admin2"
-                onClick={() => fillQuickCredentials('admin', 'fromex123')}
-                style={{
-                  background: '#f5f3ff',
-                  color: '#6d28d9',
-                  border: '1px solid #ddd6fe',
-                  borderRadius: 'var(--radius-sm, 4px)',
-                  padding: '4px 10px',
-                  fontSize: '11px',
-                  fontWeight: 600,
-                  cursor: 'pointer'
-                }}
-              >
-                Admin: Vikram (@admin)
-              </button>
-              <button
-                type="button"
-                id="btn-quick-manager"
-                onClick={() => fillQuickCredentials('manager', 'fromex123')}
-                style={{
-                  background: '#f0fdf4',
-                  color: '#15803d',
-                  border: '1px solid #bbf7d0',
-                  borderRadius: 'var(--radius-sm, 4px)',
-                  padding: '4px 10px',
-                  fontSize: '11px',
-                  fontWeight: 600,
-                  cursor: 'pointer'
-                }}
-              >
-                Manager: Pooja (@manager)
-              </button>
-            </div>
-          </div>
         </div>
 
         {/* Card Footer */}
