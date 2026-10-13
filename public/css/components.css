@@ -481,6 +481,7 @@
   box-shadow: var(--shadow-xl);
   width: 100%;
   max-width: 580px;
+  max-height: calc(100vh - 32px);
   max-height: 90vh;
   display: flex;
   flex-direction: column;
@@ -488,10 +489,19 @@
   transition: transform 0.2s ease;
   overflow: hidden;
   border: 1px solid var(--border-subtle);
+  margin: auto;
 }
 
 .modal-backdrop.open .modal-container {
   transform: translateY(0) scale(1);
+}
+
+.modal-container form {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
 }
 
 .modal-header {
@@ -501,6 +511,7 @@
   align-items: center;
   justify-content: space-between;
   background-color: #f8fafc;
+  flex-shrink: 0;
 }
 
 .modal-title {
@@ -529,6 +540,9 @@
   display: flex;
   flex-direction: column;
   gap: 16px;
+  flex: 1;
+  min-height: 0;
+  -webkit-overflow-scrolling: touch;
 }
 
 .modal-footer {
@@ -539,6 +553,62 @@
   justify-content: flex-end;
   gap: 10px;
   background-color: #f8fafc;
+  flex-shrink: 0;
+}
+
+/* Form Layout System (2-Column Grid for Modals) */
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px 16px;
+}
+
+.form-group.full-width {
+  grid-column: 1 / -1;
+}
+
+/* Compact layout for shorter screen heights (laptops 768px, browser zoom, etc.) */
+@media (max-height: 800px) {
+  .modal-container {
+    max-height: 94vh;
+  }
+  .modal-header {
+    padding: 12px 18px;
+  }
+  .modal-body {
+    padding: 14px 18px;
+    gap: 12px;
+  }
+  .modal-footer {
+    padding: 10px 18px;
+  }
+  .form-grid {
+    gap: 10px 14px;
+  }
+}
+
+@media (max-height: 650px) {
+  .modal-container {
+    max-height: 96vh;
+  }
+  .modal-header {
+    padding: 10px 14px;
+  }
+  .modal-body {
+    padding: 10px 14px;
+    gap: 8px;
+  }
+  .modal-footer {
+    padding: 8px 14px;
+  }
+  .form-group label {
+    margin-bottom: 2px;
+    font-size: 12px;
+  }
+  .input-control, .select-control {
+    padding: 6px 10px;
+    font-size: 13px;
+  }
 }
 
 /* ===================================================

@@ -179,20 +179,21 @@ export default function LoginPage() {
               display: 'inline-flex',
               alignItems: 'center',
               justifyContent: 'center',
-              width: '52px',
-              height: '52px',
-              background: 'rgba(255, 255, 255, 0.12)',
-              border: '1px solid rgba(255, 255, 255, 0.25)',
-              borderRadius: '12px',
-              fontSize: '22px',
-              fontWeight: 800,
-              letterSpacing: '1px',
-              color: '#ffffff',
+              width: '60px',
+              height: '60px',
+              background: '#ffffff',
+              border: '1px solid rgba(255, 255, 255, 0.4)',
+              borderRadius: '16px',
+              padding: '6px',
               marginBottom: '14px',
-              boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)'
+              boxShadow: '0 6px 16px rgba(0, 0, 0, 0.25)'
             }}
           >
-            FX
+            <img
+              src="/fromex-logo-icon.png"
+              alt="FROMEX Logo"
+              style={{ width: '100%', height: '100%', objectFit: 'contain', display: 'block' }}
+            />
           </div>
           <h1
             style={{

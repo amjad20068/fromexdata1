@@ -502,7 +502,9 @@ export default function FromexApplication() {
       {/* Corporate Header */}
       <header className="app-header">
         <div className="brand-section">
-          <div className="brand-logo-icon">FX</div>
+          <div className="brand-logo-icon">
+            <img src="/fromex-logo-icon.png" alt="FROMEX Logo" className="brand-logo-img" />
+          </div>
           <div className="brand-info">
             <span className="brand-title">FROMEX</span>
             <span className="brand-subtitle">Corporate Management</span>
@@ -2602,14 +2604,14 @@ function EmployeeModal({ employee, onClose, onSave }: { employee: any; onClose: 
   };
 
   return (
-    <div className="modal-backdrop open" onClick={onClose}>
-      <div className="modal-container" onClick={e => e.stopPropagation()}>
-        <div className="modal-header">
+    <div className="modal-backdrop open" onClick={onClose} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', overflowY: 'auto', padding: '16px' }}>
+      <div className="modal-container" onClick={e => e.stopPropagation()} style={{ maxHeight: 'min(92vh, 720px)', display: 'flex', flexDirection: 'column', overflow: 'hidden', margin: 'auto' }}>
+        <div className="modal-header" style={{ flexShrink: 0 }}>
           <h3 className="modal-title">{employee ? 'Edit Employee Details' : 'Add New Company Employee'}</h3>
           <button type="button" className="modal-close-btn" onClick={onClose}>&times;</button>
         </div>
-        <form onSubmit={handleSubmit}>
-          <div className="modal-body">
+        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', flex: 1, minHeight: 0, overflow: 'hidden' }}>
+          <div className="modal-body" style={{ flex: 1, minHeight: 0, overflowY: 'auto' }}>
             <div className="form-grid">
               <div className="form-group">
                 <label className="form-label">Full Name *</label>
@@ -2709,7 +2711,7 @@ function EmployeeModal({ employee, onClose, onSave }: { employee: any; onClose: 
               </div>
             </div>
           </div>
-          <div className="modal-footer" style={{ display: 'flex', justifyContent: 'flex-end', gap: '8px' }}>
+          <div className="modal-footer" style={{ display: 'flex', justifyContent: 'flex-end', gap: '8px', flexShrink: 0 }}>
             <button type="button" className="btn btn-outline" onClick={onClose}>Cancel</button>
             <button id="emp-form-save-btn" type="submit" className="btn btn-primary">{employee ? 'Update Employee' : 'Create Employee'}</button>
           </div>
